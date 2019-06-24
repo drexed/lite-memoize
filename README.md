@@ -6,7 +6,7 @@
 Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters.
 The flexible API allows you to memoize results using class or instance level cache.
 
-**NOTE:** If you are coming from `Lite::Memoize`, please read the [port](#port) section.
+**NOTE:** If you are coming from `ActiveMemoize`, please read the [port](#port) section.
 
 ## Installation
 
@@ -32,7 +32,7 @@ Or install it yourself as:
 
 ## Port
 
-`Lite::Memoize` is compatible port of [ActiveErrors](https://github.com/drexed/active_errors).
+`Lite::Memoize` is compatible port of [ActiveMemoize](https://github.com/drexed/active_memoize).
 
 Switching is as easy as renaming `ActiveMemoize::Klass` to `Lite::Memoize::Klass`
 and  `ActiveMemoize::Instance` to `Lite::Memoize::Instance`.
