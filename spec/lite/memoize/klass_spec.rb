@@ -22,9 +22,8 @@ class KlassFooService
 end
 
 RSpec.describe Lite::Memoize::Klass do
-  subject(:klass) { KlassFooService.new }
-
-  let(:service) { klass }
+  let(:klass) { KlassFooService.new }
+  let(:foo) { klass }
 
   describe '.memoize' do
     it 'returns same string twice' do
@@ -35,8 +34,8 @@ RSpec.describe Lite::Memoize::Klass do
     end
 
     it 'returns hash key with custom name' do
-      old_custom_string = service.custom
-      new_custom_string = service.custom
+      old_custom_string = foo.custom
+      new_custom_string = foo.custom
 
       expect(old_custom_string).to eq(new_custom_string)
     end
