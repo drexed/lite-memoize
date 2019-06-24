@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require 'lite/memoize/version'
-
-module Lite
-  module Memoize
-    class Error < StandardError; end
-    # Your code goes here...
-  end
+%w[version shared klass instance].each do |name|
+  require "lite/memoize/#{name}"
 end
