@@ -3,6 +3,7 @@
 module Lite
   module Memoize
     module Klass
+
       include Lite::Memoize::Shared
 
       def memoize(method_name, as: nil)

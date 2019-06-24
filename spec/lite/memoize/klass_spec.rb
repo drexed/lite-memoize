@@ -4,6 +4,7 @@ require 'spec_helper'
 require 'securerandom'
 
 class KlassFooService
+
   extend Lite::Memoize::Klass
 
   def custom
@@ -21,14 +22,14 @@ class KlassFooService
 end
 
 RSpec.describe Lite::Memoize::Klass do
-  subject { KlassFooService.new }
+  subject(:klass) { KlassFooService.new }
 
-  let(:service) { subject }
+  let(:service) { klass }
 
   describe '.memoize' do
     it 'returns same string twice' do
-      old_random_string = subject.random
-      new_random_string = subject.random
+      old_random_string = klass.random
+      new_random_string = klass.random
 
       expect(old_random_string).to eq(new_random_string)
     end

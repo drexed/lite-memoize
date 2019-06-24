@@ -3,6 +3,7 @@
 module Lite
   module Memoize
     class Instance
+
       include Lite::Memoize::Shared
 
       CALLER_METHOD_REGEX ||= /`([^']*)'/.freeze
@@ -35,13 +36,13 @@ module Lite
         cache.empty?
       end
 
-      alias_method :blank?, :empty?
+      alias blank? empty?
 
       def key?(key)
         cache.key?(key)
       end
 
-      alias_method :hit?, :key?
+      alias hit? key?
 
       def keys
         cache.keys
@@ -62,18 +63,23 @@ module Lite
         !blank?
       end
 
-      alias_method :hits?, :present?
+      alias hits? present?
 
       def size
         cache.size
+      end
+
+      def slice!(*keys)
+        keys.each { |key| cache.delete(key) }
+        cache
       end
 
       def to_hash
         cache
       end
 
-      alias_method :as_json, :to_hash
-      alias_method :hits, :to_hash
+      alias as_json to_hash
+      alias hits to_hash
 
       def values
         cache.values
