@@ -1,8 +1,12 @@
 # Lite::Memoize
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/lite/memoize`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Gem Version](https://badge.fury.io/rb/lite-memoize.svg)](http://badge.fury.io/rb/lite-memoize)
+[![Build Status](https://travis-ci.org/drexed/lite-memoize.svg?branch=master)](https://travis-ci.org/drexed/lite-memoize)
 
-TODO: Delete this and the text above, and describe your gem
+Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters.
+The flexible API allows you to memoize results using class or instance level cache.
+
+**NOTE:** If you are coming from `Lite::Memoize`, please read the [port](#port) section.
 
 ## Installation
 
@@ -20,9 +24,71 @@ Or install it yourself as:
 
     $ gem install lite-memoize
 
-## Usage
+## Table of Contents
 
-TODO: Write usage instructions here
+* [Port](#port)
+* [Klass](#klass)
+* [Instance](#instance)
+
+## Port
+
+`Lite::Memoize` is compatible port of [ActiveErrors](https://github.com/drexed/active_errors).
+
+Switching is as easy as renaming `ActiveMemoize::Klass` to `Lite::Memoize::Klass`
+and  `ActiveMemoize::Instance` to `Lite::Memoize::Instance`.
+
+## Klass
+
+Class level memoization is the quickest way to get up and running using your cache, but provides the least amount of flexibility.
+You can only cache results without access to any information about your cache.
+
+```ruby
+class Movies
+  extend Lite::Memoize::Klass
+
+  def random
+    HTTP.get('http://movies.com/any')
+  end
+
+  memoize :random
+
+  def search(title)
+    HTTP.get("http://movies.com?title=#{title}")
+  end
+
+  memoize :search, as: :find
+
+end
+```
+
+## Instance
+
+Instance level memoization is a more involved way to setup your cache, but provides the most amount of flexibility.
+You can access almost all methods in the `instance.rb` file.
+
+```ruby
+class Movies
+
+  def cache
+    @cache ||= Lite::Memoize::Instance.new
+  end
+
+  def all
+    cache.memoize { HTTP.get("http://movies.com/all") }
+  end
+
+  def random
+    cache['random'] ||= HTTP.get('http://movies.com/any')
+  end
+
+  def search(title)
+    cache.memoize(as: :find, refresh: !cache.empty?) do
+      HTTP.get("http://movies.com?title=#{title}")
+    end
+  end
+
+end
+```
 
 ## Development
 
