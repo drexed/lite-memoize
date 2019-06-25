@@ -26,16 +26,9 @@ Or install it yourself as:
 
 ## Table of Contents
 
-* [Port](#port)
 * [Klass](#klass)
 * [Instance](#instance)
-
-## Port
-
-`Lite::Memoize` is compatible port of [ActiveMemoize](https://github.com/drexed/active_memoize).
-
-Switching is as easy as renaming `ActiveMemoize::Klass` to `Lite::Memoize::Klass`
-and  `ActiveMemoize::Instance` to `Lite::Memoize::Instance`.
+* [Port](#port)
 
 ## Klass
 
@@ -89,6 +82,13 @@ class Movies
 
 end
 ```
+
+## Port
+
+`Lite::Memoize` is compatible port of [ActiveMemoize](https://github.com/drexed/active_memoize).
+
+Switching is as easy as renaming `ActiveMemoize::Klass` to `Lite::Memoize::Klass`
+and  `ActiveMemoize::Instance` to `Lite::Memoize::Instance`.
 
 ## Development
 
