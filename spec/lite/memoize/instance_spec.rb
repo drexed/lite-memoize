@@ -34,11 +34,11 @@ RSpec.describe Lite::Memoize::Instance do
   let(:foo) { InstanceFooService.new }
 
   describe '.[]' do
-    it 'returns nil' do
+    it 'to be nil' do
       expect(klass[:field]).to eq(nil)
     end
 
-    it 'returns "error message"' do
+    it 'to be "error message"' do
       klass[:field] = 'error message'
 
       expect(klass[:field]).to eq('error message')
@@ -46,7 +46,7 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.[]=' do
-    it 'returns "error message"' do
+    it 'to be "error message"' do
       klass[:field] = 'error message'
 
       expect(klass[:field]).to eq('error message')
@@ -54,7 +54,7 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.clear' do
-    it 'returns {}' do
+    it 'to be {}' do
       klass[:field] = 'error message'
 
       expect(klass.clear).to eq({})
@@ -62,7 +62,7 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.delete' do
-    it 'returns "error message"' do
+    it 'to be "error message"' do
       klass[:field] = 'error message'
 
       expect(klass.delete(:field)).to eq('error message')
@@ -70,11 +70,11 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.empty?' do
-    it 'returns true' do
+    it 'to be true' do
       expect(klass.empty?).to eq(true)
     end
 
-    it 'returns false' do
+    it 'to be false' do
       klass[:field] = 'error message'
 
       expect(klass.empty?).to eq(false)
@@ -82,11 +82,11 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.key?' do
-    it 'returns false' do
+    it 'to be false' do
       expect(klass.key?(:field)).to eq(false)
     end
 
-    it 'returns true' do
+    it 'to be true' do
       klass[:field] = 'error message'
 
       expect(klass.key?(:field)).to eq(true)
@@ -94,7 +94,7 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.keys' do
-    it 'returns [:field]' do
+    it 'to be [:field]' do
       klass[:field] = 'error message'
 
       expect(klass.keys).to eq(%i[field])
@@ -102,14 +102,14 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.memoize' do
-    it 'returns same string twice' do
+    it 'to be same string twice' do
       old_random_string = foo.random
       new_random_string = foo.random
 
       expect(old_random_string).to eq(new_random_string)
     end
 
-    it 'returns different strings' do
+    it 'to be different strings' do
       old_custom_string = foo.custom
       new_custom_string = foo.custom
 
@@ -119,7 +119,7 @@ RSpec.describe Lite::Memoize::Instance do
 
   # rubocop:disable Performance/RedundantMerge
   describe '.merge!' do
-    it 'returns { field: "other message" }' do
+    it 'to be { field: "other message" }' do
       # Skip fasterer error: Hash#merge!
 
       klass[:field] = 'error message'
@@ -131,11 +131,11 @@ RSpec.describe Lite::Memoize::Instance do
   # rubocop:enable Performance/RedundantMerge
 
   describe '.present?' do
-    it 'returns false' do
+    it 'to be false' do
       expect(klass.present?).to eq(false)
     end
 
-    it 'returns true' do
+    it 'to be true' do
       klass[:field] = 'error message'
 
       expect(klass.present?).to eq(true)
@@ -143,11 +143,11 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.size' do
-    it 'returns 0' do
+    it 'to be 0' do
       expect(klass.size).to eq(0)
     end
 
-    it 'returns 1' do
+    it 'to be 1' do
       klass[:field] = 'error message'
 
       expect(klass.size).to eq(1)
@@ -155,7 +155,7 @@ RSpec.describe Lite::Memoize::Instance do
   end
 
   describe '.slice!' do
-    it 'returns {}' do
+    it 'to be {}' do
       klass[:field] = 'error message'
 
       expect(klass.slice!(:field)).to eq({})
@@ -165,13 +165,13 @@ RSpec.describe Lite::Memoize::Instance do
   describe '.to_hash' do
     before { klass[:field] = 'error message' }
 
-    it 'returns { field: "error message" }' do
+    it 'to be { field: "error message" }' do
       expect(klass.to_hash).to eq(field: 'error message')
     end
   end
 
   describe '.values' do
-    it 'returns ["error message"]' do
+    it 'to be ["error message"]' do
       klass[:field] = 'error message'
 
       expect(klass.values).to eq(['error message'])

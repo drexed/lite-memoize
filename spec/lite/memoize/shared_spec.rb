@@ -13,7 +13,7 @@ RSpec.describe Lite::Memoize::Shared do
   let(:foo) { SharedFooService }
 
   describe '.cache' do
-    it 'returns {}' do
+    it 'to be {}' do
       expect(foo.cache).to eq({})
     end
   end
@@ -21,11 +21,11 @@ RSpec.describe Lite::Memoize::Shared do
   describe '.key' do
     key = 'random:dd7878149a8196d5b21abf3f51532dd46d79c471'
 
-    it "returns '#{key}'" do
+    it "to be '#{key}'" do
       expect(foo.key('random', [1, {}, []])).to eq(key)
     end
 
-    it 'returns "random"' do
+    it 'to be "random"' do
       expect(foo.key('random', [])).to eq('random')
     end
   end

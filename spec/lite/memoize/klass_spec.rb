@@ -26,14 +26,14 @@ RSpec.describe Lite::Memoize::Klass do
   let(:foo) { klass }
 
   describe '.memoize' do
-    it 'returns same string twice' do
+    it 'to be same string twice' do
       old_random_string = klass.random
       new_random_string = klass.random
 
       expect(old_random_string).to eq(new_random_string)
     end
 
-    it 'returns hash key with custom name' do
+    it 'to be hash key with custom name' do
       old_custom_string = foo.custom
       new_custom_string = foo.custom
 
