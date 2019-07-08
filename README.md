@@ -85,7 +85,7 @@ end
 
 ## Port
 
-`Lite::Memoize` is compatible port of [ActiveMemoize](https://github.com/drexed/active_memoize).
+`Lite::Memoize` is a compatible port of [ActiveMemoize](https://github.com/drexed/active_memoize).
 
 Switching is as easy as renaming `ActiveMemoize::Klass` to `Lite::Memoize::Klass`
 and  `ActiveMemoize::Instance` to `Lite::Memoize::Instance`.
