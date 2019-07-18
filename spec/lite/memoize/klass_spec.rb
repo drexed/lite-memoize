@@ -32,7 +32,7 @@ RSpec.describe Lite::Memoize::Klass do
       expect(old_random_string).to eq(new_random_string)
     end
 
-    it 'to be hash key with custom name' do
+    it 'to be same string twice but cached with a different name' do
       old_custom_string = service.custom
       new_custom_string = service.custom
 

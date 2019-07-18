@@ -58,24 +58,24 @@ module Lite
         end
         # rubocop:enable Lint/NestedMethodDefinition
 
-        def memoized_ivar_for(method_name, identifier = nil)
-          "@#{memoized_prefix(identifier)}_#{escape_punctuation(method_name)}"
+        def memoized_ivar_for(method_name, as = nil)
+          "@#{memoized_prefix(as)}_#{escape_punctuation(method_name)}"
         end
 
-        def unmemoized_method_for(method_name, identifier = nil)
-          "#{unmemoized_prefix(identifier)}_#{method_name}".to_sym
+        def unmemoized_method_for(method_name, as = nil)
+          "#{unmemoized_prefix(as)}_#{method_name}".to_sym
         end
 
-        def memoized_prefix(identifier = nil)
-          return '_memoized' unless identifier
+        def memoized_prefix(as = nil)
+          return '_memoized' unless as
 
-          "_memoized_#{identifier}"
+          "_memoized_#{as}"
         end
 
-        def unmemoized_prefix(identifier = nil)
-          return '_unmemoized' unless identifier
+        def unmemoized_prefix(as = nil)
+          return '_unmemoized' unless as
 
-          "_unmemoized_#{identifier}"
+          "_unmemoized_#{as}"
         end
 
         def escape_punctuation(string)
@@ -90,14 +90,6 @@ module Lite
 
           klass.singleton_class.class_eval(*args, &block)
         end
-
-        # rubocop:disable Metrics/LineLength
-        def extract_reload!(method, args)
-          return unless (args.size == method.arity.abs + 1) && (args.last == true || args.last == :reload)
-
-          args.pop
-        end
-        # rubocop:enable Metrics/LineLength
 
       end
 
@@ -124,11 +116,11 @@ module Lite
       # rubocop:disable Metrics/AbcSize, Metrics/BlockLength, Metrics/CyclomaticComplexity
       # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
       def memoize(*method_names)
-        identifier = method_names.pop[:identifier] if method_names.last.is_a?(Hash)
+        as = method_names.pop[:as] if method_names.last.is_a?(Hash)
 
         method_names.each do |method_name|
-          unmemoized_method = Lite::Memoize::Alias.unmemoized_method_for(method_name, identifier)
-          memoized_ivar = Lite::Memoize::Alias.memoized_ivar_for(method_name, identifier)
+          unmemoized_method = Lite::Memoize::Alias.unmemoized_method_for(method_name, as)
+          memoized_ivar = Lite::Memoize::Alias.memoized_ivar_for(method_name, as)
 
           Lite::Memoize::Alias.memoist_eval(self) do
             include InstanceMethods
@@ -147,35 +139,40 @@ module Lite
 
             if mm.arity.zero?
               module_eval <<-RUBY, __FILE__, __LINE__ + 1
-                def #{method_name}(reload = false)
+                def #{method_name}(reload: false)
                   skip_cache = reload || !instance_variable_defined?("#{memoized_ivar}")
                   set_cache = skip_cache && !frozen?
+
                   if skip_cache
                     value = #{unmemoized_method}
                   else
                     value = #{memoized_ivar}
                   end
+
                   if set_cache
                     #{memoized_ivar} = value
                   end
+
                   value
                 end
               RUBY
             else
               module_eval <<-RUBY, __FILE__, __LINE__ + 1
-                def #{method_name}(*args)
-                  reload = Lite::Memoize::Alias.extract_reload!(method(#{unmemoized_method.inspect}), args)
-                  skip_cache = reload || !(instance_variable_defined?(#{memoized_ivar.inspect}) && #{memoized_ivar} && #{memoized_ivar}.has_key?(args))
+                def #{method_name}(*args, reload: false)
+                  skip_cache = reload || !(instance_variable_defined?(#{memoized_ivar.inspect}) && #{memoized_ivar} && #{memoized_ivar}.key?(args))
                   set_cache = skip_cache && !frozen?
+
                   if skip_cache
                     value = #{unmemoized_method}(*args)
                   else
                     value = #{memoized_ivar}[args]
                   end
+
                   if set_cache
                     #{memoized_ivar} ||= {}
                     #{memoized_ivar}[args] = value
                   end
+
                   value
                 end
               RUBY
