@@ -4,7 +4,7 @@ module Lite
   module Memoize
     module Klass
 
-      include Lite::Memoize::Shared
+      include Lite::Memoize::Mixin
 
       def memoize(method_name, as: nil)
         inner_method = instance_method(method_name)

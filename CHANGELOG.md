@@ -8,10 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - 2019-07-18
 ### Added
-- Add mixin class
-- Add benchmarks
+- Added mixin module
+- Added benchmarks
 ### Changed
-- Improve speed of key generation and lookup
+- Improved speed of key generation and lookup for instance
+### Removed
+- Removed shared module
 
 ## [1.0.0] - 2019-06-24
 ### Added
