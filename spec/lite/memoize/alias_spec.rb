@@ -93,9 +93,16 @@ RSpec.describe Lite::Memoize::Alias do
       expect(old_custom_string).to eq(new_custom_string)
     end
 
-    it 'to be different strings' do
+    it 'to be different strings with reload' do
       old_random_string = service.custom
       new_random_string = service.custom(reload: true)
+
+      expect(old_random_string).not_to eq(new_random_string)
+    end
+
+    it 'to be different strings with different args' do
+      old_random_string = service.random!(9)
+      new_random_string = service.random!(8)
 
       expect(old_random_string).not_to eq(new_random_string)
     end
