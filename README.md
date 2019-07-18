@@ -58,7 +58,9 @@ class Movies
     HTTP.get('http://movies.com/any')
   end
 
+  # NOTE: memoize must be before alias
   memoize :random
+  alias rando random
 
   def search(title)
     HTTP.get("http://movies.com?title=#{title}")
@@ -91,7 +93,9 @@ class Movies
     HTTP.get('http://movies.com/any')
   end
 
+  # NOTE: memoize must be before alias
   memoize :random
+  alias rando random
 
   def search(title)
     HTTP.get("http://movies.com?title=#{title}")
@@ -128,6 +132,8 @@ class Movies
     cache['random'] ||= HTTP.get("http://movies.com/any?type=#{type}")
   end
 
+  alias rando random
+
   # NOTE: Arguments in the memoize method are optional
   def search(title)
     cache.memoize(as: :find, args: [title], reload: !cache.empty?) do
@@ -152,6 +158,8 @@ class Movies
   def all
     memoize(:all) { HTTP.get("http://movies.com/all") }
   end
+
+  alias full all
 
   # NOTE: Arguments in the memoize method are optional with the exception of method name
   def search(title)
