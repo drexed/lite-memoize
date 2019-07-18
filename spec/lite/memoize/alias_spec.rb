@@ -19,17 +19,21 @@ class MemoAliasService
 
   end
 
+  def uncached
+    SecureRandom.hex(10)
+  end
+
   def custom
     SecureRandom.hex(10)
   end
 
   memoize :custom, as: 'custom_name'
 
-  def random(length = 10)
+  def random!(length = 10)
     SecureRandom.hex(length)
   end
 
-  memoize :random
+  memoize :random!
 
   protected
 
@@ -62,8 +66,8 @@ RSpec.describe Lite::Memoize::Alias do
     end
 
     it 'to be same string twice for public method' do
-      old_random_string = service.random
-      new_random_string = service.random
+      old_random_string = service.random!
+      new_random_string = service.random!
 
       expect(old_random_string).to eq(new_random_string)
     end
@@ -92,6 +96,16 @@ RSpec.describe Lite::Memoize::Alias do
     it 'to be different strings' do
       old_random_string = service.custom
       new_random_string = service.custom(reload: true)
+
+      expect(old_random_string).not_to eq(new_random_string)
+    end
+  end
+
+  describe '.clear_cache' do
+    it 'to be different strings' do
+      old_random_string = service.random!
+      service.clear_cache
+      new_random_string = service.random!
 
       expect(old_random_string).not_to eq(new_random_string)
     end

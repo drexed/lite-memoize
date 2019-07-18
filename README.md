@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/lite-memoize.svg)](http://badge.fury.io/rb/lite-memoize)
 [![Build Status](https://travis-ci.org/drexed/lite-memoize.svg?branch=master)](https://travis-ci.org/drexed/lite-memoize)
 
-Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters. The flexible API allows you to memoize results using class, instance, or mixin level cache.
+Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters. The flexible API allows you to memoize results using alias, class, instance, or mixin level cache.
 
 **NOTE:** If you are coming from `ActiveMemoize`, please read the [port](#port) section.
 
@@ -25,15 +25,61 @@ Or install it yourself as:
 
 ## Table of Contents
 
+* [Alias](#alias)
 * [Klass](#klass)
 * [Instance](#instance)
 * [Mixin](#mixin)
 * [Benchmarks](#benchmarks)
 * [Port](#port)
 
+## Alias
+
+Alias level memoization is the fastest of the available methods, and provides a decent level
+of control. It's the only one that can also be used to memoize class level methods. Method
+arguments are automatically watched to cache dynamic values.
+
+You can only cache results without access to any information about the `store`.
+
+```ruby
+class Movies
+  extend Lite::Memoize::Alias
+
+  class << self
+    extend Lite::Memoize::Alias
+
+    def random
+      HTTP.get('http://movies.com/any')
+    end
+
+    memoize :random
+  end
+
+  def random
+    HTTP.get('http://movies.com/any')
+  end
+
+  memoize :random
+
+  def search(title)
+    HTTP.get("http://movies.com?title=#{title}")
+  end
+
+  memoize :search, as: :find
+
+end
+
+# NOTE: To reload a method just append the reload argument key
+Movies.random               #=> Cached
+Movies.random(reload: true) #=> New value
+
+# NOTE: To flush the entire cache
+Movies.clear_cache #=> New value
+```
+
 ## Klass
 
-Class level memoization is the quickest way to get up and running using your cache, but provides the least amount of flexibility. It's perfect for short lived or non-altering items like `activerecord` objects.
+Class level memoization is the quickest way to get up without polluting your class with new methods.
+It's perfect for short lived or non-altering items like `activerecord` objects.
 
 You can only cache results without access to any information about the `store`.
 
@@ -58,9 +104,11 @@ end
 
 ## Instance
 
-Instance level memoization is the slowest of the available methods, but provides it provides
+Instance level memoization is the slowest of the available methods, but it provides
 the most amount of flexibility and control. It's very useful for creating services or things
-where control is paramount like clearing the cache or dumping it to JSON.
+where control is paramount like clearing the cache or dumping it to JSON. Please read the spec
+suite to see all available actions. Method arguments are automatically watched to cache dynamic
+values.
 
 You can access almost all methods in the `instance.rb` file.
 
@@ -76,8 +124,8 @@ class Movies
     cache.memoize { HTTP.get("http://movies.com/all") }
   end
 
-  def random
-    cache['random'] ||= HTTP.get('http://movies.com/any')
+  def random(type)
+    cache['random'] ||= HTTP.get("http://movies.com/any?type=#{type}")
   end
 
   # NOTE: Arguments in the memoize method are optional
@@ -92,8 +140,8 @@ end
 
 ## Mixin
 
-Mixin level memoization is the fastest of the available methods, and provides a decent level
-of control.
+Mixin level memoization is the leanest of the available methods, and provides a decent level
+of control. Useful when you want to keep your class light weight.
 
 You can access all methods to the `Hash` class.
 
@@ -117,7 +165,7 @@ end
 
 ## Benchmarks
 
-The classes ranked from fastest to slowest are `Mixin`, `Klass`, and `Instance`.
+The classes ranked from fastest to slowest are `Alias`, `Mixin`, `Klass`, and `Instance`.
 
 View all how it compares to other libs by running the [benchmarks](https://github.com/drexed/lite-statistics/tree/master/benchmarks).
 
