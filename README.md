@@ -3,8 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/lite-memoize.svg)](http://badge.fury.io/rb/lite-memoize)
 [![Build Status](https://travis-ci.org/drexed/lite-memoize.svg?branch=master)](https://travis-ci.org/drexed/lite-memoize)
 
-Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters.
-The flexible API allows you to memoize results using class or instance level cache.
+Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters. The flexible API allows you to memoize results using class, instance, or mixin level cache.
 
 **NOTE:** If you are coming from `ActiveMemoize`, please read the [port](#port) section.
 
@@ -28,12 +27,15 @@ Or install it yourself as:
 
 * [Klass](#klass)
 * [Instance](#instance)
+* [Mixin](#mixin)
+* [Benchmarks](#benchmarks)
 * [Port](#port)
 
 ## Klass
 
-Class level memoization is the quickest way to get up and running using your cache, but provides the least amount of flexibility.
-You can only cache results without access to any information about your cache.
+Class level memoization is the quickest way to get up and running using your cache, but provides the least amount of flexibility. It's perfect for short lived or non-altering items like `activerecord` objects.
+
+You can only cache results without access to any information about the `store`.
 
 ```ruby
 class Movies
@@ -56,7 +58,10 @@ end
 
 ## Instance
 
-Instance level memoization is a more involved way to setup your cache, but provides the most amount of flexibility.
+Instance level memoization is the slowest of the available methods, but provides it provides
+the most amount of flexibility and control. It's very useful for creating services or things
+where control is paramount like clearing the cache or dumping it to JSON.
+
 You can access almost all methods in the `instance.rb` file.
 
 ```ruby
@@ -66,6 +71,7 @@ class Movies
     @cache ||= Lite::Memoize::Instance.new
   end
 
+  # NOTE: This method gets all relevent info like name and args automatically
   def all
     cache.memoize { HTTP.get("http://movies.com/all") }
   end
@@ -74,14 +80,46 @@ class Movies
     cache['random'] ||= HTTP.get('http://movies.com/any')
   end
 
+  # NOTE: Arguments in the memoize method are optional
   def search(title)
-    cache.memoize(as: :find, refresh: !cache.empty?) do
+    cache.memoize(as: :find, args: [title], refresh: !cache.empty?) do
       HTTP.get("http://movies.com?title=#{title}")
     end
   end
 
 end
 ```
+
+## Mixin
+
+Mixin level memoization is the fastest of the available methods, and provides a decent level
+of control.
+
+You can access all methods to the `Hash` class.
+
+```ruby
+class Movies
+  include Lite::Memoize::Mixin
+
+  def all
+    memoize(:all) { HTTP.get("http://movies.com/all") }
+  end
+
+  # NOTE: Arguments in the memoize method are optional with the exception of method name
+  def search(title)
+    memoize(:find, args: [title], refresh: false) do
+      HTTP.get("http://movies.com?title=#{title}")
+    end
+  end
+
+end
+```
+
+## Benchmarks
+
+The classes ranked from fastest to slowest are `Mixin`, `Klass`, and `Instance`.
+
+View all how it compares to other libs by running the [benchmarks](https://github.com/drexed/lite-statistics/tree/master/benchmarks).
 
 ## Port
 

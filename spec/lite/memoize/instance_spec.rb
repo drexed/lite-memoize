@@ -125,7 +125,7 @@ RSpec.describe Lite::Memoize::Instance do
       klass[:field] = 'error message'
       klass.merge!(field: 'other message')
 
-      expect(klass.cache).to eq(field: 'other message')
+      expect(klass.store).to eq(field: 'other message')
     end
   end
   # rubocop:enable Performance/RedundantMerge

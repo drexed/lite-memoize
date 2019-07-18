@@ -4,12 +4,12 @@ module Lite
   module Memoize
     module Shared
 
-      def cache
-        @cache ||= {}
+      def store
+        @store ||= {}
       end
 
-      def caller_key(block, name = nil)
-        name = [*(name || block.source_location)]
+      def caller_key(block, as: nil)
+        name = as ? [as] : block.source_location
         return name.concat(block) if block.is_a?(Array)
 
         block.binding.local_variables.each_with_object(name) do |local_name, array|

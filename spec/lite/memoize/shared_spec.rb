@@ -12,19 +12,19 @@ RSpec.describe Lite::Memoize::Shared do
   let(:klass) { SharedFooService.new }
   let(:foo) { SharedFooService }
 
-  describe '.cache' do
+  describe '.store' do
     it 'to be {}' do
-      expect(foo.cache).to eq({})
+      expect(foo.store).to eq({})
     end
   end
 
   describe '.caller_key' do
     it 'to be ["random", 1, {}, []]' do
-      expect(foo.caller_key([1, {}, []], 'random')).to eq(['random', 1, {}, []])
+      expect(foo.caller_key([1, {}, []], as: 'random')).to eq(['random', 1, {}, []])
     end
 
     it 'to be "random"' do
-      expect(foo.caller_key([], 'random')).to eq(['random'])
+      expect(foo.caller_key([], as: 'random')).to eq(['random'])
     end
   end
 

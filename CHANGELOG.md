@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.1] - 2019-07-17
+## [1.0.1] - 2019-07-18
+### Added
+- Add mixin class
+- Add benchmarks
 ### Changed
 - Improve speed of key generation and lookup
 

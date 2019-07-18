@@ -10,9 +10,9 @@ module Lite
         inner_method = instance_method(method_name)
 
         define_method(method_name) do |*args|
-          key = self.class.caller_key(args, as || method_name)
+          key = self.class.caller_key(args, as: as || method_name)
 
-          self.class.cache[key] ||= inner_method.bind(self).call(*args)
+          self.class.store[key] ||= inner_method.bind(self).call(*args)
         end
       end
 

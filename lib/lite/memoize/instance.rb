@@ -9,54 +9,54 @@ module Lite
       def initialize; end
 
       def [](key)
-        cache[key]
+        store[key]
       end
 
       def []=(key, val)
-        cache[key] = val
+        store[key] = val
       end
 
       def clear
-        cache.clear
+        store.clear
       end
 
       def delete(key)
-        cache.delete(key)
+        store.delete(key)
       end
 
       # :nocov:
       def each
-        cache.each { |key, val| yield(key, val) }
+        store.each { |key, val| yield(key, val) }
       end
       # :nocov:
 
       def empty?
-        cache.empty?
+        store.empty?
       end
 
       alias blank? empty?
 
       def key?(key)
-        cache.key?(key)
+        store.key?(key)
       end
 
       alias hit? key?
 
       def keys
-        cache.keys
+        store.keys
       end
 
       def merge!(hash)
-        cache.merge!(hash)
+        store.merge!(hash)
       end
 
-      def memoize(as: nil, refresh: false, &block)
-        key = caller_key(block, as)
+      def memoize(as: nil, args: nil, refresh: false, &block)
+        key = caller_key(args || block, as: as)
 
         if refresh
-          cache[key] = yield(block)
+          store[key] = yield
         else
-          cache[key] ||= yield(block)
+          store[key] ||= yield
         end
       end
 
@@ -67,23 +67,23 @@ module Lite
       alias hits? present?
 
       def size
-        cache.size
+        store.size
       end
 
       def slice!(*keys)
-        keys.each { |key| cache.delete(key) }
-        cache
+        keys.each { |key| store.delete(key) }
+        store
       end
 
       def to_hash
-        cache
+        store
       end
 
       alias as_json to_hash
       alias hits to_hash
 
       def values
-        cache.values
+        store.values
       end
 
     end
