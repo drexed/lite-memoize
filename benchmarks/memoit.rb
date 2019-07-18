@@ -1,24 +1,20 @@
 # frozen_string_literal: true
 
-require 'memoizable'
+require 'memoit'
 require_relative 'base'
 
-class MemoizableCache
+class MemoitCache
 
-  include Memoizable
-
-  def randomize
+  memoize def randomize
     rand(1..99)
   end
-
-  memoize :randomize
 
 end
 
 klass_a = LiteMemoizeInstanceCache.new
 klass_b = LiteMemoizeKlassCache.new
 klass_c = LiteMemoizeMixinCache.new
-klass_d = MemoizableCache.new
+klass_d = MemoitCache.new
 
 Benchmark.ips do |x|
   x.report('instance') do
@@ -33,7 +29,7 @@ Benchmark.ips do |x|
     klass_c.randomize
   end
 
-  x.report('memoizable') do
+  x.report('memoit') do
     klass_d.randomize
   end
 
