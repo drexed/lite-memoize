@@ -34,6 +34,7 @@ class MemoAliasService
   end
 
   memoize :random!
+  alias rando random!
 
   protected
 
@@ -68,6 +69,13 @@ RSpec.describe Lite::Memoize::Alias do
     it 'to be same string twice for public method' do
       old_random_string = service.random!
       new_random_string = service.random!
+
+      expect(old_random_string).to eq(new_random_string)
+    end
+
+    it 'to be same string twice for aliased method' do
+      old_random_string = service.random!
+      new_random_string = service.rando
 
       expect(old_random_string).to eq(new_random_string)
     end
