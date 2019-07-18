@@ -18,15 +18,13 @@ RSpec.describe Lite::Memoize::Shared do
     end
   end
 
-  describe '.key' do
-    key = 'random:dd7878149a8196d5b21abf3f51532dd46d79c471'
-
-    it "to be '#{key}'" do
-      expect(foo.key('random', [1, {}, []])).to eq(key)
+  describe '.caller_key' do
+    it 'to be ["random", 1, {}, []]' do
+      expect(foo.caller_key([1, {}, []], 'random')).to eq(['random', 1, {}, []])
     end
 
     it 'to be "random"' do
-      expect(foo.key('random', [])).to eq('random')
+      expect(foo.caller_key([], 'random')).to eq(['random'])
     end
   end
 

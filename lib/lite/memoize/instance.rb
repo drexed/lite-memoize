@@ -6,8 +6,6 @@ module Lite
 
       include Lite::Memoize::Shared
 
-      CALLER_METHOD_REGEX ||= /`([^']*)'/.freeze
-
       def initialize; end
 
       def [](key)
@@ -53,10 +51,13 @@ module Lite
       end
 
       def memoize(as: nil, refresh: false, &block)
-        key = key(as || caller_method, caller_locals(block))
-        return cache[key] if !refresh && cache.key?(key)
+        key = caller_key(block, as)
 
-        cache[key] = yield(block)
+        if refresh
+          cache[key] = yield(block)
+        else
+          cache[key] ||= yield(block)
+        end
       end
 
       def present?
@@ -83,20 +84,6 @@ module Lite
 
       def values
         cache.values
-      end
-
-      private
-
-      def caller_locals(block)
-        local_vars = block.binding.local_variables
-        local_vars.flat_map { |name| [name, block.binding.local_variable_get(name)] }
-      end
-
-      def caller_method
-        val = caller(2..2).first[CALLER_METHOD_REGEX, 1]
-        return val unless val.include?('<top (required)>')
-
-        caller(1..1).first[CALLER_METHOD_REGEX, 1]
       end
 
     end

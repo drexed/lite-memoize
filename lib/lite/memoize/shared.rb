@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'digest'
-
 module Lite
   module Memoize
     module Shared
@@ -10,11 +8,14 @@ module Lite
         @cache ||= {}
       end
 
-      def key(method_name, method_args)
-        return method_name.to_s if method_args.empty?
+      def caller_key(block, name = nil)
+        name = [*(name || block.source_location)]
+        return name.concat(block) if block.is_a?(Array)
 
-        method_sha1 = Digest::SHA1.hexdigest(method_args.to_s)
-        "#{method_name}:#{method_sha1}"
+        block.binding.local_variables.each_with_object(name) do |local_name, array|
+          array << local_name
+          array << block.binding.local_variable_get(local_name)
+        end
       end
 
     end
