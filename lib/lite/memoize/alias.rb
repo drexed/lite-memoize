@@ -7,6 +7,7 @@ module Lite
       MemoizedMethod = Struct.new(:memoized_method, :ivar, :arity)
 
       module InstanceMethods
+
         def memoize_all
           prime_cache
         end
@@ -40,9 +41,12 @@ module Lite
             remove_instance_variable(struct.ivar)
           end
         end
+
       end
 
       class << self
+
+        # rubocop:disable Lint/NestedMethodDefinition
         def extended(extender)
           Lite::Memoize::Alias.memoist_eval(extender) do
             return if singleton_class.method_defined?(:memoized_methods)
@@ -52,6 +56,7 @@ module Lite
             end
           end
         end
+        # rubocop:enable Lint/NestedMethodDefinition
 
         def memoized_ivar_for(method_name, identifier = nil)
           "@#{memoized_prefix(identifier)}_#{escape_punctuation(method_name)}"
@@ -86,11 +91,14 @@ module Lite
           klass.singleton_class.class_eval(*args, &block)
         end
 
+        # rubocop:disable Metrics/LineLength
         def extract_reload!(method, args)
           return unless (args.size == method.arity.abs + 1) && (args.last == true || args.last == :reload)
 
           args.pop
         end
+        # rubocop:enable Metrics/LineLength
+
       end
 
       def all_memoized_structs
@@ -113,6 +121,8 @@ module Lite
         @all_memoized_structs = nil
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/BlockLength, Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
       def memoize(*method_names)
         identifier = method_names.pop[:identifier] if method_names.last.is_a?(Hash)
 
@@ -123,10 +133,12 @@ module Lite
           Lite::Memoize::Alias.memoist_eval(self) do
             include InstanceMethods
 
+            # rubocop:disable Lint/NonLocalExitFromIterator
             if method_defined?(unmemoized_method)
               warn "Already memoized #{method_name}"
               return
             end
+            # rubocop:enable Lint/NonLocalExitFromIterator
 
             alias_method unmemoized_method, method_name
 
@@ -134,7 +146,7 @@ module Lite
             memoized_methods << mm
 
             if mm.arity.zero?
-              module_eval <<-EOS, __FILE__, __LINE__ + 1
+              module_eval <<-RUBY, __FILE__, __LINE__ + 1
                 def #{method_name}(reload = false)
                   skip_cache = reload || !instance_variable_defined?("#{memoized_ivar}")
                   set_cache = skip_cache && !frozen?
@@ -148,9 +160,9 @@ module Lite
                   end
                   value
                 end
-              EOS
+              RUBY
             else
-              module_eval <<-EOS, __FILE__, __LINE__ + 1
+              module_eval <<-RUBY, __FILE__, __LINE__ + 1
                 def #{method_name}(*args)
                   reload = Lite::Memoize::Alias.extract_reload!(method(#{unmemoized_method.inspect}), args)
                   skip_cache = reload || !(instance_variable_defined?(#{memoized_ivar.inspect}) && #{memoized_ivar} && #{memoized_ivar}.has_key?(args))
@@ -166,7 +178,7 @@ module Lite
                   end
                   value
                 end
-              EOS
+              RUBY
             end
 
             if private_method_defined?(unmemoized_method)
@@ -179,6 +191,8 @@ module Lite
 
         method_names.size == 1 ? method_names.first : method_names
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/AbcSize, Metrics/BlockLength, Metrics/CyclomaticComplexity
 
     end
   end

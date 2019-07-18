@@ -75,7 +75,7 @@ RSpec.describe Lite::Memoize::Alias do
       expect(old_random_string).to eq(new_random_string)
     end
 
-    it 'to be same string twice for protected method' do
+    it 'to be same string twice for private method' do
       old_random_string = service.send(:private_random)
       new_random_string = service.send(:private_random)
 
