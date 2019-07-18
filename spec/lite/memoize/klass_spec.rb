@@ -3,7 +3,7 @@
 require 'spec_helper'
 require 'securerandom'
 
-class KlassFooService
+class MemoKlassService
 
   extend Lite::Memoize::Klass
 
@@ -22,20 +22,19 @@ class KlassFooService
 end
 
 RSpec.describe Lite::Memoize::Klass do
-  let(:klass) { KlassFooService.new }
-  let(:foo) { klass }
+  let(:service) { MemoKlassService.new }
 
   describe '.memoize' do
     it 'to be same string twice' do
-      old_random_string = klass.random
-      new_random_string = klass.random
+      old_random_string = service.random
+      new_random_string = service.random
 
       expect(old_random_string).to eq(new_random_string)
     end
 
     it 'to be hash key with custom name' do
-      old_custom_string = foo.custom
-      new_custom_string = foo.custom
+      old_custom_string = service.custom
+      new_custom_string = service.custom
 
       expect(old_custom_string).to eq(new_custom_string)
     end

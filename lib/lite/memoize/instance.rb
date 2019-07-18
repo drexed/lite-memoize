@@ -20,6 +20,8 @@ module Lite
         store.clear
       end
 
+      alias flush clear
+
       def delete(key)
         store.delete(key)
       end
@@ -50,10 +52,10 @@ module Lite
         store.merge!(hash)
       end
 
-      def memoize(as: nil, args: nil, refresh: false, &block)
+      def memoize(as: nil, args: nil, reload: false, &block)
         key = caller_key(args || block, as: as)
 
-        if refresh
+        if reload
           store[key] = yield
         else
           store[key] ||= yield

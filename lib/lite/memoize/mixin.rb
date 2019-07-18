@@ -5,7 +5,7 @@ module Lite
     module Mixin
 
       def store
-        @store ||= {}
+        @_memoized_methods ||= {}
       end
 
       def caller_key(block, as: nil)
@@ -18,10 +18,10 @@ module Lite
         end
       end
 
-      def memoize(method_name, args: nil, refresh: false)
+      def memoize(method_name, args: nil, reload: false)
         key = "#{method_name}:#{args}"
 
-        if refresh
+        if reload
           store[key] = yield
         else
           store[key] ||= yield

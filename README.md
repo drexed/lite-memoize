@@ -82,7 +82,7 @@ class Movies
 
   # NOTE: Arguments in the memoize method are optional
   def search(title)
-    cache.memoize(as: :find, args: [title], refresh: !cache.empty?) do
+    cache.memoize(as: :find, args: [title], reload: !cache.empty?) do
       HTTP.get("http://movies.com?title=#{title}")
     end
   end
@@ -107,7 +107,7 @@ class Movies
 
   # NOTE: Arguments in the memoize method are optional with the exception of method name
   def search(title)
-    memoize(:find, args: [title], refresh: false) do
+    memoize(:find, args: [title], reload: false) do
       HTTP.get("http://movies.com?title=#{title}")
     end
   end

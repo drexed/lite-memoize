@@ -18,6 +18,10 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/**/*'
     - '*.gemspec'
+Naming/FileName:
+  Enabled: false
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
 Naming/UncommunicativeMethodParamName:
   Enabled: false
 Style/Documentation:

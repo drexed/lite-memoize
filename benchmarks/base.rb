@@ -5,6 +5,18 @@
 require 'benchmark/ips'
 require 'lite/memoize'
 
+class LiteMemoizeAliasCache
+
+  extend Lite::Memoize::Alias
+
+  def randomize
+    rand(1..99)
+  end
+
+  memoize :randomize
+
+end
+
 class LiteMemoizeInstanceCache
 
   def cache

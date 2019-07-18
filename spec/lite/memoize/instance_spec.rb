@@ -3,14 +3,14 @@
 require 'spec_helper'
 require 'securerandom'
 
-class InstanceFooService
+class MemoInstanceService
 
   def cache
     @cache ||= Lite::Memoize::Instance.new
   end
 
   def custom
-    cache.memoize(as: 'custom_name', refresh: true) do
+    cache.memoize(as: 'custom_name', reload: true) do
       SecureRandom.hex(10)
     end
   end
@@ -31,7 +31,7 @@ end
 
 RSpec.describe Lite::Memoize::Instance do
   let(:klass) { described_class.new }
-  let(:foo) { InstanceFooService.new }
+  let(:service) { MemoInstanceService.new }
 
   describe '.[]' do
     it 'to be nil' do
@@ -103,15 +103,15 @@ RSpec.describe Lite::Memoize::Instance do
 
   describe '.memoize' do
     it 'to be same string twice' do
-      old_random_string = foo.random
-      new_random_string = foo.random
+      old_random_string = service.random
+      new_random_string = service.random
 
       expect(old_random_string).to eq(new_random_string)
     end
 
     it 'to be different strings' do
-      old_custom_string = foo.custom
-      new_custom_string = foo.custom
+      old_custom_string = service.custom
+      new_custom_string = service.custom
 
       expect(old_custom_string).not_to eq(new_custom_string)
     end
