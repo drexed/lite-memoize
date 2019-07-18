@@ -106,9 +106,9 @@ end
 
 Instance level memoization is the slowest of the available methods, but it provides
 the most amount of flexibility and control. It's very useful for creating services or things
-where control is paramount like clearing the cache or dumping it to JSON. Please read the spec
-suite to see all available actions. Method arguments are automatically watched to cache dynamic
-values.
+where control is paramount like clearing the cache or dumping it to JSON. Method arguments
+are automatically watched to cache dynamic values. Please read the spec suite to see all
+available actions.
 
 You can access almost all methods in the `instance.rb` file.
 
