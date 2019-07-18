@@ -8,14 +8,6 @@ module Lite
 
       module InstanceMethods
 
-        def memoize_all
-          prime_cache
-        end
-
-        def unmemoize_all
-          flush_cache
-        end
-
         def memoized_structs(names)
           ref_obj = self.class.respond_to?(:class_eval) ? singleton_class : self
           structs = ref_obj.all_memoized_structs
@@ -24,7 +16,7 @@ module Lite
           structs.select { |s| names.include?(s.memoized_method) }
         end
 
-        def prime_cache(*method_names)
+        def memoize_all(*method_names)
           memoized_structs(method_names).each do |struct|
             if struct.arity.zero?
               __send__(struct.memoized_method)
@@ -34,13 +26,15 @@ module Lite
           end
         end
 
-        def flush_cache(*method_names)
+        def clear_cache(*method_names)
           memoized_structs(method_names).each do |struct|
             next unless instance_variable_defined?(struct.ivar)
 
             remove_instance_variable(struct.ivar)
           end
         end
+
+        alias flush_cache clear_cache
 
       end
 
