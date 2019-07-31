@@ -175,7 +175,7 @@ end
 
 The classes ranked from fastest to slowest are `Alias`, `Mixin`, `Klass`, and `Instance`.
 
-View all how it compares to other libs by running the [benchmarks](https://github.com/drexed/lite-statistics/tree/master/benchmarks).
+View how each compares to other libs by running the [benchmarks](https://github.com/drexed/lite-statistics/tree/master/benchmarks).
 
 ## Port
 
