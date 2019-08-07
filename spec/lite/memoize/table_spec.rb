@@ -3,9 +3,9 @@
 require 'spec_helper'
 require 'securerandom'
 
-class MemoMixinService
+class MemoTableService
 
-  include Lite::Memoize::Mixin
+  include Lite::Memoize::Table
 
   def custom
     memoize(:random, reload: true) { SecureRandom.hex(10) }
@@ -19,8 +19,8 @@ class MemoMixinService
 
 end
 
-RSpec.describe Lite::Memoize::Mixin do
-  let(:service) { MemoMixinService.new }
+RSpec.describe Lite::Memoize::Table do
+  let(:service) { MemoTableService.new }
 
   describe '.store' do
     it 'to be {}' do
@@ -30,11 +30,11 @@ RSpec.describe Lite::Memoize::Mixin do
 
   describe '.caller_key' do
     it 'to be ["random", 1, {}, []]' do
-      expect(service.caller_key([1, {}, []], as: 'random')).to eq(['random', 1, {}, []])
+      expect(service.send(:caller_key, [1, {}, []], as: 'random')).to eq(['random', 1, {}, []])
     end
 
     it 'to be "random"' do
-      expect(service.caller_key([], as: 'random')).to eq(['random'])
+      expect(service.send(:caller_key, [], as: 'random')).to eq(['random'])
     end
   end
 

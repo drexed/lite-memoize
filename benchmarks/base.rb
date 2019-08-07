@@ -41,9 +41,19 @@ class LiteMemoizeKlassCache
 
 end
 
-class LiteMemoizeMixinCache
+class LiteMemoizeTableCache
 
-  include Lite::Memoize::Mixin
+  include Lite::Memoize::Table
+
+  def randomize
+    memoize(:randomize) { rand(1..99) }
+  end
+
+end
+
+class LiteMemoizeVariableCache
+
+  include Lite::Memoize::Variable
 
   def randomize
     memoize(:randomize) { rand(1..99) }

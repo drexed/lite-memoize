@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/lite-memoize.svg)](http://badge.fury.io/rb/lite-memoize)
 [![Build Status](https://travis-ci.org/drexed/lite-memoize.svg?branch=master)](https://travis-ci.org/drexed/lite-memoize)
 
-Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters. The flexible API allows you to memoize results using alias, class, instance, or mixin level cache.
+Lite::Memoize provides an API for caching and memoizing locally expensive calculations including those with parameters. The flexible API allows you to memoize results using alias, class, instance, table, or variable based cache.
 
 **NOTE:** If you are coming from `ActiveMemoize`, please read the [port](#port) section.
 
@@ -28,13 +28,14 @@ Or install it yourself as:
 * [Alias](#alias)
 * [Klass](#klass)
 * [Instance](#instance)
-* [Mixin](#mixin)
+* [Table](#table)
+* [Variable](#variable)
 * [Benchmarks](#benchmarks)
 * [Port](#port)
 
 ## Alias
 
-Alias level memoization is the fastest of the available methods, and provides a decent level
+Alias based memoization is the fastest of the available methods, and provides a decent level
 of control. It's the only one that can also be used to memoize class level methods. Method
 arguments are automatically watched to cache dynamic values.
 
@@ -80,7 +81,7 @@ Movies.clear_cache #=> New value
 
 ## Klass
 
-Class level memoization is the quickest way to get up without polluting your class with new methods.
+Class based memoization is the quickest way to get up without polluting your class with new methods.
 It's perfect for short lived or non-altering items like `activerecord` objects.
 
 You can only cache results without access to any information about the `store`.
@@ -108,7 +109,7 @@ end
 
 ## Instance
 
-Instance level memoization is the slowest of the available methods, but it provides
+Instance based memoization is the slowest of the available methods, but it provides
 the most amount of flexibility and control. It's very useful for creating services or things
 where control is paramount like clearing the cache or dumping it to JSON. Method arguments
 are automatically watched to cache dynamic values. Please read the spec suite to see all
@@ -144,16 +145,40 @@ class Movies
 end
 ```
 
-## Mixin
+## Variable
 
-Mixin level memoization is the leanest of the available methods, and provides a decent level
+Variable based memoization is lean but pollute the class with variables.
+
+```ruby
+class Movies
+  include Lite::Memoize::Variable
+
+  def all
+    memoize(:all) { HTTP.get("http://movies.com/all") }
+  end
+
+  alias full all
+
+  # NOTE: Arguments in the memoize method are optional with the exception of method name
+  def search(title)
+    memoize(:find, args: [title], reload: false) do
+      HTTP.get("http://movies.com?title=#{title}")
+    end
+  end
+
+end
+```
+
+## Table
+
+Table based memoization is the leanest of the available methods, and provides a decent level
 of control. Useful when you want to keep your class light weight.
 
 You can access all methods to the `Hash` class.
 
 ```ruby
 class Movies
-  include Lite::Memoize::Mixin
+  include Lite::Memoize::Table
 
   def all
     memoize(:all) { HTTP.get("http://movies.com/all") }
@@ -173,7 +198,7 @@ end
 
 ## Benchmarks
 
-The classes ranked from fastest to slowest are `Alias`, `Mixin`, `Klass`, and `Instance`.
+The classes ranked from fastest to slowest are `Alias`, `Table`, `Klass`, `Variable`, and `Instance`.
 
 View how each compares to other libs by running the [benchmarks](https://github.com/drexed/lite-statistics/tree/master/benchmarks).
 

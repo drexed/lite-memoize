@@ -4,7 +4,7 @@ module Lite
   module Memoize
     class Instance
 
-      include Lite::Memoize::Mixin
+      include Lite::Memoize::Table
 
       def initialize; end
 

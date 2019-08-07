@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2019-08-07
+### Added
+- Added variable base memoization
+### Changed
+- Renamed mixin to table
+- Changed caller_key method to private
+
 ## [1.0.1] - 2019-07-18
 ### Added
 - Added alias memoization
@@ -13,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improved speed of key generation and lookup for instance
 - Changed refresh arg to reload
-- Renamed shared to mixin
+- Renamed shared to table
 
 ## [1.0.0] - 2019-06-24
 ### Added
