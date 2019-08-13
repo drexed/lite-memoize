@@ -26,6 +26,8 @@ Naming/MemoizedInstanceVariableName:
   Enabled: false
 Naming/UncommunicativeMethodParamName:
   Enabled: false
+Style/AccessModifierDeclarations:
+  Enabled: false
 Style/Documentation:
   Enabled: false
 Style/ExpandPathArguments:

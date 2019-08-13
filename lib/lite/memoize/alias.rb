@@ -34,6 +34,7 @@ module Lite
           end
         end
 
+        alias clear clear_cache
         alias flush_cache clear_cache
 
       end

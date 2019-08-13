@@ -16,9 +16,7 @@ module Lite
         end
       end
 
-      # rubocop:disable Style/AccessModifierDeclarations
       public :caller_key
-      # rubocop:enable Style/AccessModifierDeclarations
 
     end
   end
