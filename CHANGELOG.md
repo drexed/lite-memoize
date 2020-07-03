@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.3] - 2019-08-13
 ### Added
+- Added ruby 2.7 support
 - Added clear alias from clear_cache on Alias
 
 ## [1.0.2] - 2019-08-07
