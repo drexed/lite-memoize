@@ -26,11 +26,11 @@ module Lite
         store.delete(key)
       end
 
-      # :nocov:
+      # rubocop:disable Style/ExplicitBlockArgument
       def each
         store.each { |key, val| yield(key, val) }
       end
-      # :nocov:
+      # rubocop:enable Style/ExplicitBlockArgument
 
       def empty?
         store.empty?

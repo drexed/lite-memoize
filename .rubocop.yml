@@ -6,6 +6,8 @@ AllCops:
   NewCops: enable
   DisplayCopNames: true
   DisplayStyleGuide: true
+Gemspec/RequiredRubyVersion:
+  Enabled: false
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 Layout/EmptyLinesAroundBlockBody:
@@ -38,6 +40,8 @@ Naming/MethodParameterName:
 Style/AccessModifierDeclarations:
   Enabled: false
 Style/Documentation:
+  Enabled: false
+Style/DocumentDynamicEvalDefinition:
   Enabled: false
 Style/ExpandPathArguments:
   Enabled: false

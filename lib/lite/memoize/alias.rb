@@ -41,7 +41,6 @@ module Lite
 
       class << self
 
-        # rubocop:disable Lint/NestedMethodDefinition
         def extended(extender)
           Lite::Memoize::Alias.memoist_eval(extender) do
             return if singleton_class.method_defined?(:memoized_methods)
@@ -51,7 +50,6 @@ module Lite
             end
           end
         end
-        # rubocop:enable Lint/NestedMethodDefinition
 
         def memoized_ivar_for(method_name, as = nil)
           "@#{memoized_prefix(as)}_#{escape_punctuation(method_name)}"
