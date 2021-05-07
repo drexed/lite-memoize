@@ -12,7 +12,7 @@ module Lite
         define_method(method_name) do |*args|
           key = self.class.caller_key(args, as: as || method_name)
 
-          self.class.store[key] ||= inner_method.bind(self).call(*args)
+          self.class.store[key] ||= inner_method.bind_call(self, *args)
         end
       end
 
