@@ -2,7 +2,7 @@ require:
   - rubocop-performance
   - rubocop-rspec
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
   NewCops: enable
   DisplayCopNames: true
   DisplayStyleGuide: true
@@ -38,6 +38,8 @@ Naming/MemoizedInstanceVariableName:
 Naming/MethodParameterName:
   Enabled: false
 Style/AccessModifierDeclarations:
+  Enabled: false
+Style/ArgumentsForwarding:
   Enabled: false
 Style/Documentation:
   Enabled: false
