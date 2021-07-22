@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
-%w[version alias table instance klass variable].each do |name|
-  require "lite/memoize/#{name}"
-end
+require 'lite/memoize/version'
+require 'lite/memoize/alias'
+require 'lite/memoize/table'
+require 'lite/memoize/instance'
+require 'lite/memoize/klass'
+require 'lite/memoize/variable'
